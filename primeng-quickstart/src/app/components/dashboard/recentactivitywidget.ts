@@ -17,7 +17,21 @@ import { CommonModule } from '@angular/common';
           [ngClass]="['activity-icon', activity.color, 'pi', activity.icon]"
         ></i>
         <div class="activity-content">
-          <span class="activity-text">{{ activity.text }}</span>
+          <span class="activity-label" *ngIf="activity.label">{{
+            activity.label
+          }}</span>
+          <span class="activity-text">
+            <ng-container *ngIf="activity.link; else plainText">
+              <a
+                [href]="activity.link"
+                target="_blank"
+                rel="noopener"
+                class="activity-link"
+                >{{ activity.text }}</a
+              >
+            </ng-container>
+            <ng-template #plainText>{{ activity.text }}</ng-template>
+          </span>
           <span class="activity-time">{{ activity.time }}</span>
         </div>
       </div>
@@ -29,30 +43,45 @@ import { CommonModule } from '@angular/common';
   },
 })
 export class RecentActivityWidget {
-  
   activities = [
     {
-      icon: 'pi-shopping-cart',
-      text: 'New order #1123',
-      time: '2 minutes ago',
-      color: 'pink',
-    },
-    {
       icon: 'pi-user-plus',
-      text: 'New customer registered',
+      label: 'New user added',
+      text: 'Jeremy Smith',
+      link: 'https://www.terzo.ai',
       time: '15 minutes ago',
-      color: 'green',
+      color: 'yellow',
     },
     {
-      icon: 'pi-check-circle',
-      text: 'Payment processed',
-      time: '25 minutes ago',
+      icon: 'pi-file-pdf',
+      label: 'New contract updated',
+      text: 'Oracle Enterprise SaaS Subscription',
+      link: 'https://www.terzo.ai',
+      time: '2 days ago',
       color: 'blue',
     },
     {
-      icon: 'pi-inbox',
-      text: 'Inventory updated',
-      time: '40 minutes ago',
+      icon: 'pi-file-pdf',
+      label: 'New contract updated',
+      text: 'Oracle Cloud Infrastructure Usage Agreement',
+      link: 'https://www.terzo.ai',
+      time: '3 days ago',
+      color: 'blue',
+    },
+    {
+      icon: 'pi-file-pdf',
+      label: 'New contract updated',
+      text: 'Oracle SaaS Master Services Agreement (MSA)',
+      link: 'https://www.terzo.ai',
+      time: '4 days ago',
+      color: 'blue',
+    },
+    {
+      icon: 'pi-user-plus',
+      label: 'New user added',
+      text: 'Marcus Oberman',
+      link: 'https://www.terzo.ai',
+      time: '5 days ago',
       color: 'yellow',
     },
   ];

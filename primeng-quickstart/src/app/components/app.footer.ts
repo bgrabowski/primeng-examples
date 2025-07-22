@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="footer-container">
-      <div class="footer-copyright">202X PrimeNG.</div>
+      <div class="footer-copyright">©2025 Terzo AI.</div>
       <div class="footer-links">
-        <a
+        <!-- <a
           href="https://twitter.com/prime_ng"
           target="_blank"
           rel="noopener noreferrer"
@@ -32,7 +32,7 @@ import { CommonModule } from '@angular/common';
           class="footer-link"
         >
           <i class="pi pi-github footer-icon"></i>
-        </a>
+        </a> -->
       </div>
     </div>
   `,

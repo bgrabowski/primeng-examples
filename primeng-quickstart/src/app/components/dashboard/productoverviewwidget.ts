@@ -12,9 +12,13 @@ import { LayoutService } from '../../service/layout.service';
 
 interface Product {
   name: string;
-  category: string;
-  price: number;
+  department: string;
+  unitCost: number;
+  quantity: number;
+  totalCost: number;
   status: 'In Stock' | 'Low Stock' | 'Out of Stock';
+  vendor?: string;
+  currency?: string;
 }
 @Component({
   selector: 'product-overview-widget',
@@ -32,7 +36,7 @@ interface Product {
   ],
   template: `
     <div class="products-header">
-      <span class="products-title">Products Overview</span>
+      <span class="products-title">Recent Products</span>
       <p-iconfield class="search-field">
         <p-inputicon class="pi pi-search" />
         <input
@@ -51,40 +55,34 @@ interface Product {
         [(selection)]="selectedProduct"
         [loading]="loading"
         [rows]="5"
+        [paginator]="true"
+        [rowsPerPageOptions]="[5,10,20]"
+        [showCurrentPageReport]="true"
+        [showJumpToPageDropdown]="true"
         styleClass="products-table"
         [ngClass]="{ 'p-dark': isDarkMode() }"
       >
         <ng-template #header>
           <tr>
             <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
-            <th pSortableColumn="category">
-              Category <p-sortIcon field="category" />
+            <th pSortableColumn="department">
+              Department <p-sortIcon field="department" />
             </th>
-
-            <th pSortableColumn="price">Price <p-sortIcon field="price" /></th>
-            <th pSortableColumn="status">
-              Status <p-sortIcon field="status" />
-            </th>
+            <th pSortableColumn="unitCost">Unit Cost <p-sortIcon field="unitCost" /></th>
+            <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity" /></th>
+            <th pSortableColumn="totalCost">Total Cost <p-sortIcon field="totalCost" /></th>
           </tr>
         </ng-template>
         <ng-template #body let-product>
           <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.price }}</td>
             <td>
-              <p-tag
-                [severity]="
-                  product.status === 'In Stock'
-                    ? 'success'
-                    : product.status === 'Low Stock'
-                    ? 'warn'
-                    : 'danger'
-                "
-              >
-                {{ product.status }}
-              </p-tag>
+              <span class="product-vendor" *ngIf="product.vendor">{{ product.vendor }}</span>
+              <span class="product-name">{{ product.name }}</span>
             </td>
+            <td>{{ product.department }}</td>
+            <td>{{ product.unitCost | number:'1.0-0' }} {{ product.currency }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.totalCost | number:'1.0-0' }} {{ product.currency }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -102,14 +100,24 @@ interface Product {
     .p-dark .p-datatable-mask {
       background-color: color-mix(in srgb, var(--p-surface-900), transparent 80%) !important;
     }
-  
     .p-datatable-loading-icon {
       color: var(--p-primary-500) !important;
     }
+    .product-vendor {
+      display: block;
+      font-size: 0.85em;
+      color: #6b7280;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .product-name {
+      display: block;
+      font-size: 1em;
+      font-weight: 600;
+    }
 }
 
-`,
-})
+`})
 export class ProductOverviewWidget {
   layoutService = inject(LayoutService);
 
@@ -119,28 +127,134 @@ export class ProductOverviewWidget {
 
   products: Product[] = [
     {
-      name: 'Laptop Pro',
-      category: 'Electronics',
-      price: 2499,
+      name: 'Salesforce CRM',
+      vendor: 'Salesforce',
+      department: 'CRM',
+      unitCost: 120,
+      quantity: 10,
+      totalCost: 1200,
+      currency: 'USD',
       status: 'In Stock',
     },
     {
-      name: 'Wireless Mouse',
-      category: 'Accessories',
-      price: 49,
+      name: 'Workday HCM',
+      vendor: 'Workday',
+      department: 'HR',
+      unitCost: 95,
+      quantity: 10,
+      totalCost: 950,
+      currency: 'USD',
       status: 'Low Stock',
     },
     {
-      name: 'Monitor 4K',
-      category: 'Electronics',
-      price: 699,
+      name: 'ServiceNow ITSM',
+      vendor: 'ServiceNow',
+      department: 'ITSM',
+      unitCost: 180,
+      quantity: 10,
+      totalCost: 1800,
+      currency: 'USD',
       status: 'Out of Stock',
     },
     {
-      name: 'Keyboard',
-      category: 'Accessories',
-      price: 149,
+      name: 'SAP S/4HANA Cloud',
+      vendor: 'SAP',
+      department: 'ERP',
+      unitCost: 220,
+      quantity: 10,
+      totalCost: 2200,
+      currency: 'USD',
       status: 'In Stock',
+    },
+    {
+      name: 'Oracle Fusion Cloud ERP',
+      vendor: 'Oracle',
+      department: 'ERP',
+      unitCost: 210,
+      quantity: 10,
+      totalCost: 2100,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'Microsoft Dynamics 365',
+      vendor: 'Microsoft',
+      department: 'CRM',
+      unitCost: 130,
+      quantity: 10,
+      totalCost: 1300,
+      currency: 'USD',
+      status: 'Low Stock',
+    },
+    {
+      name: 'Adobe Creative Cloud',
+      vendor: 'Adobe',
+      department: 'Productivity',
+      unitCost: 80,
+      quantity: 10,
+      totalCost: 800,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'Google Workspace',
+      vendor: 'Google',
+      department: 'Productivity',
+      unitCost: 60,
+      quantity: 10,
+      totalCost: 600,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'Atlassian Jira Software',
+      vendor: 'Atlassian',
+      department: 'Project Management',
+      unitCost: 90,
+      quantity: 10,
+      totalCost: 900,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'Zendesk Support Suite',
+      vendor: 'Zendesk',
+      department: 'Customer Support',
+      unitCost: 85,
+      quantity: 10,
+      totalCost: 850,
+      currency: 'USD',
+      status: 'Low Stock',
+    },
+    {
+      name: 'Slack Business+',
+      vendor: 'Slack',
+      department: 'Collaboration',
+      unitCost: 70,
+      quantity: 10,
+      totalCost: 700,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'Box Enterprise',
+      vendor: 'Box',
+      department: 'Cloud Storage',
+      unitCost: 65,
+      quantity: 10,
+      totalCost: 650,
+      currency: 'USD',
+      status: 'In Stock',
+    },
+    {
+      name: 'DocuSign eSignature',
+      vendor: 'DocuSign',
+      department: 'eSignature',
+      unitCost: 78,
+      quantity: 10,
+      totalCost: 780,
+      currency: 'USD',
+      status: 'Out of Stock',
     },
   ];
 
@@ -159,7 +273,7 @@ export class ProductOverviewWidget {
     this.filteredProducts = this.products.filter(
       (product) =>
         product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        product.category
+        product.department
           .toLowerCase()
           .includes(this.searchQuery.toLowerCase()) ||
         product.status.toLowerCase().includes(this.searchQuery.toLowerCase())

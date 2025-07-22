@@ -1,5 +1,12 @@
 @use "primeicons/primeicons.css";
 
+/* Custom Variables */
+$dashboard-gap: 1rem;
+
+.p-tag {
+    font-weight: 500 !important;
+}
+/* Global Styles */
 html {
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -26,7 +33,7 @@ body {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: $dashboard-gap;
 }
 
 .p-dark .layout-container {
@@ -41,13 +48,13 @@ body {
     max-width: 1400px;
     width: 100%;
     margin: 0 auto;
-    gap: 1.5rem;
+    gap: $dashboard-gap;
 }
 
 .layout-grid-row {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
+    gap: $dashboard-gap;
     width: 100%;
 }
 
@@ -60,6 +67,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    position: relative;
+    transition: box-shadow 0.18s, background 0.18s;
+    /* No animation, always visible */
+}
+
+.layout-card:hover {
+    box-shadow: 0 4px 24px 0 rgba(99, 102, 241, 0.10);
+    background: var(--p-surface-0);
 }
 
 .p-dark .layout-card {
@@ -68,13 +83,49 @@ body {
     border-color: var(--p-surface-700);
 }
 
+// .dashboard-filters-chip {
+//     position: absolute;
+//     top: 1rem;
+//     right: 1rem;
+//     z-index: 10;
+//     display: flex;
+//     align-items: center;
+//     opacity: 0;
+//     pointer-events: none;
+//     transition: opacity 0.18s;
+//     margin-right: 0.5rem;
+// }
+
+.layout-card:hover .dashboard-filters-chip {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dashboard-filters-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+.layout-card:hover .dashboard-filters-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .stats {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 1.714rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: $dashboard-gap;
     position: relative;
     z-index: 0;
 }
+
 
 .stats-icon-box {
     flex-shrink: 0;
@@ -103,7 +154,7 @@ body {
 }
 
 .stats-title {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 300;
     line-height: 1.25;
     color: var(--p-surface-900);
@@ -154,6 +205,7 @@ body {
     font-size: 1rem;
     font-weight: 500;
     color: var(--p-surface-900);
+    margin-bottom: 10px;
 }
 
 .p-dark .chart-title {
@@ -167,12 +219,50 @@ body {
     padding: 0.5rem 0;
 }
 .activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
+  max-height: 320px; /* Match sales trend widget height, adjust as needed */
+  overflow-y: scroll;
+  padding-right: 16px; /* Increased padding for scrollbar spacing */
+  scrollbar-width: thin;
+  scrollbar-color: var(--p-primary-500) #f3f4f6;
+  /* Force scrollbars always visible */
+  min-width: 0;
+  -ms-overflow-style: scrollbar;
+  overflow: scroll !important;
+  /* For Webkit browsers, force overlay scrollbars always visible */
+  scrollbar-gutter: stable both-edges;
+}
+.activity-list::-webkit-scrollbar {
+  width: 8px;
+
+  display: block !important;
+}
+.activity-list::-webkit-scrollbar-thumb {
+  background: var(--p-primary-500) !important;
+  border-radius: 6px;
+  min-height: 24px;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .activity-list {
+    scrollbar-gutter: stable both-edges;
+  }
+}
+.activity-label {
+  display: block;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: #6b7280; /* Tailwind gray-500 */
+  margin-bottom: 2px;
+}
+.activity-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+.activity-link:hover {
+  color: var(--p-primary-400);
+  text-decoration: underline;
+}
 .activity-item {
     display: flex;
     align-items: center;
@@ -181,11 +271,17 @@ body {
     border: 1px solid var(--p-surface-200);
     border-radius: 0.5rem;
     background-color: var(--p-surface-50);
+    margin-bottom: 10px;
+    transition: background 0.15s;
 }
 
 .p-dark .activity-item {
     background-color: var(--p-surface-800);
     border-color: var(--p-surface-700);
+}
+
+.activity-item:hover {
+  background: rgba(99, 102, 241, 0.06); /* subtle violet hover */
 }
 
 .activity-icon {
@@ -304,7 +400,7 @@ body {
 
 @media (max-width: 991px) {
     .stats {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
     .layout-grid-row {
         flex-direction: column;
@@ -528,7 +624,7 @@ body {
 
 .footer-links {
     display: flex;
-    gap: 1rem;
+    gap: $dashboard-gap;
 }
 
 .footer-link {

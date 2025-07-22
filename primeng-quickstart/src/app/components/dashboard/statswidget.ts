@@ -34,28 +34,23 @@ export class StatsWidget {
   
   stats = [
     {
-      title: 'Total Orders',
-      icon: 'pi-shopping-cart',
-      value: '1,234',
-      subtitle: 'Last 7 days',
-    },
-    {
-      title: 'Active Users',
-      icon: 'pi-users',
-      value: '2,573',
-      subtitle: 'Last 7 days',
-    },
-    {
-      title: 'Revenue',
+      title: 'Total Contract Value',
       icon: 'pi-dollar',
-      value: '$45,200',
-      subtitle: 'Last 7 days',
+      value: '$5.6M',
+      subtitle: '485 total contracts',
     },
     {
-      title: 'Success Rate',
-      icon: 'pi-chart-line',
-      value: '95%',
-      subtitle: 'Last 7 days',
+      title: 'Contracts Expiring in 30 days',
+      icon: 'pi-clock',
+      value: '$24.5K',
+      subtitle: '12 contracts',
     },
+    {
+      title: 'Contracts Expiring in 60 days',
+      icon: 'pi-clock',
+      value: '$82.6K',
+      subtitle: '28 contracts',
+    },
+  
   ];
 }

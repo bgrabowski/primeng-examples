@@ -14,7 +14,7 @@ export interface AppState {
 export class LayoutService {
   _appState: AppState = {
     preset: 'Aura',
-    primary: 'emerald',
+    primary: 'violet',
     surface: null,
     darkMode: false,
   };

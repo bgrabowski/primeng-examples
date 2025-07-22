@@ -1,16 +1,26 @@
 import { Component, inject } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
+import { ChipModule } from 'primeng/chip';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { LayoutService } from '../../service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
+import 'primeicons/primeicons.css';
 
 @Component({
   selector: 'sales-trend-widget',
   standalone: true,
-  imports: [CommonModule, ChartModule],
+  imports: [CommonModule, ChartModule, ChipModule, ButtonModule, TagModule],
   template: `
     <div class="chart-header">
-      <span class="chart-title">Sales Trend</span>
+      <span class="chart-title">Agreement Type</span>
+      <div class="dashboard-filters-actions">
+        <p-tag class="dashboard-filters-chip" icon="pi pi-filter" value="3"></p-tag>
+        <button pButton type="button" icon="pi pi-chart-bar" class="p-button-text p-button-rounded dashboard-filters-action"></button>
+        <button pButton type="button" icon="pi pi-palette" class="p-button-text p-button-rounded dashboard-filters-action" (click)="toggleYellow()" [ngClass]="{ 'active': useYellow }" [title]="useYellow ? 'Use Primary Colors' : 'Use Yellow Colors'"></button>
+        <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-text p-button-rounded dashboard-filters-action"></button>
+      </div>
     </div>
     <div class="chart-content">
       <p-chart
@@ -41,6 +51,8 @@ export class SalesTrendWidget {
     { name: 'August - December 2020', code: '1' },
   ];
 
+  useYellow: boolean = false;
+
   constructor() {
     this.subscription = this.layoutService.appStateUpdate$
       .pipe(debounceTime(25))
@@ -55,7 +67,17 @@ export class SalesTrendWidget {
 
   initChart() {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
+    const barColors = this.useYellow
+      ? [
+          documentStyle.getPropertyValue('--p-yellow-400'),
+          documentStyle.getPropertyValue('--p-yellow-300'),
+          documentStyle.getPropertyValue('--p-yellow-200'),
+        ]
+      : [
+          documentStyle.getPropertyValue('--p-primary-400'),
+          documentStyle.getPropertyValue('--p-primary-300'),
+          documentStyle.getPropertyValue('--p-primary-200'),
+        ];
 
     this.chartData = {
       labels: ['Q1', 'Q2', 'Q3', 'Q4'],
@@ -63,21 +85,21 @@ export class SalesTrendWidget {
         {
           type: 'bar',
           label: 'Subscriptions',
-          backgroundColor: documentStyle.getPropertyValue('--p-primary-400'),
+          backgroundColor: barColors[0],
           data: [4000, 10000, 15000, 4000],
           barThickness: 32,
         },
         {
           type: 'bar',
-          label: 'Advertising',
-          backgroundColor: documentStyle.getPropertyValue('--p-primary-300'),
+          label: 'Services',
+          backgroundColor: barColors[1],
           data: [2100, 8400, 2400, 7500],
           barThickness: 32,
         },
         {
           type: 'bar',
-          label: 'Affiliate',
-          backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
+          label: 'Licenses',
+          backgroundColor: barColors[2],
           data: [4100, 5200, 3400, 7400],
           borderRadius: {
             topLeft: 8,
@@ -141,6 +163,11 @@ export class SalesTrendWidget {
       this.chartData.datasets[2].data = dataSet1[parseInt('2')];
       this.chartData.datasets[3].data = dataSet1[parseInt('3')];
     }
+  }
+
+  toggleYellow() {
+    this.useYellow = !this.useYellow;
+    this.initChart();
   }
 
   ngOnDestroy() {
